@@ -63,6 +63,7 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 
 
+// FUNCTIONS TO DISPLAY NEW MOVEMENTS
  const displayMovements = function(movements) {
 
   containerMovements.innerHTML = '';
@@ -79,5 +80,21 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
   });
  };
-
  displayMovements(account1.movements);
+ 
+
+// CREATTING USER NAME
+const createUserName = function(accounts) {
+  accounts.forEach(function(account) {
+    account.userName = account.owner.toLowerCase()
+    .split(' ').map(function(name) {
+      return name[0];
+
+    }).join('');
+
+  });
+}; 
+createUserName(accounts);
+
+
+
