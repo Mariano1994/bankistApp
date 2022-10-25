@@ -82,6 +82,19 @@ const inputClosePin = document.querySelector('.form__input--pin');
  };
  displayMovements(account1.movements);
  
+// CALCULATING BALANCES
+const calcDisplayBalance = function(movements) {
+
+  const balance = movements.reduce(function(accumulatorBalance, mov) {
+    return accumulatorBalance + mov;
+  }, 0);
+
+  labelBalance.textContent = `${balance} EUR`;
+
+}
+calcDisplayBalance(account1.movements);
+
+
 
 // CREATTING USER NAME
 const createUserName = function(accounts) {
