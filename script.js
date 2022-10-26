@@ -73,7 +73,7 @@ const inputClosePin = document.querySelector('.form__input--pin');
     const html = `
      <div class="movements__row">
        <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
-       <div class="movements__value">${mov}</div>
+       <div class="movements__value">${mov}€</div>
     </div>
     `;
     containerMovements.insertAdjacentHTML('afterbegin', html);
@@ -81,7 +81,7 @@ const inputClosePin = document.querySelector('.form__input--pin');
   });
  };
  displayMovements(account1.movements);
- 
+
  
 // CALCULATING BALANCES
 const calcDisplayBalance = function(movements) {
@@ -90,7 +90,7 @@ const calcDisplayBalance = function(movements) {
     return accumulatorBalance + mov;
   }, 0);
 
-  labelBalance.textContent = `${balance} EUR`;
+  labelBalance.textContent = `${balance}€`;
 
 }
 calcDisplayBalance(account1.movements);
@@ -98,18 +98,31 @@ calcDisplayBalance(account1.movements);
 
 // Calculating Sammury
 const calDisplaySummay = function(movements) {
-  const incomes = movements.filter(mov => mov > 0)
-  .reduce(function(accu, mov){
-    return accu + mov;
-  })
+  // INCOMES
+  const incomes = movements
+    .filter(mov => mov > 0)
+    .reduce(function(accu, mov){
+      return accu + mov;
+  }, 0);
 
-  const outComes = movements.filter(mov => mov < 0)
-  .reduce(function(accu, mov){
-    return accu + mov;
-  })
+  // OUTCOMES
+  const outComes = movements
+    .filter(mov => mov < 0)
+    .reduce(function(accu, mov){
+      return accu + mov;
+  }, 0);
 
-  labelSumIn.textContent = `${incomes} EUR`;
-  labelSumOut.textContent = `${outComes} EUR`;
+  // INTEREST
+  const interest = movements
+    .filter(mov => mov > 0)
+    .map(deposit => (deposit * 1.2) / 100)
+    .filter(deposit => deposit >= 1)
+    .reduce((acc, int) => acc + int, 0);
+   
+
+  labelSumIn.textContent = `${incomes}€`;
+  labelSumOut.textContent = `${Math.abs(outComes)}€`;
+  labelSumInterest.textContent = `${interest}€`;
 
 };
 calDisplaySummay(account1.movements);
