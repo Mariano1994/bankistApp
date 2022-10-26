@@ -82,6 +82,7 @@ const inputClosePin = document.querySelector('.form__input--pin');
  };
  displayMovements(account1.movements);
  
+ 
 // CALCULATING BALANCES
 const calcDisplayBalance = function(movements) {
 
@@ -94,6 +95,24 @@ const calcDisplayBalance = function(movements) {
 }
 calcDisplayBalance(account1.movements);
 
+
+// Calculating Sammury
+const calDisplaySummay = function(movements) {
+  const incomes = movements.filter(mov => mov > 0)
+  .reduce(function(accu, mov){
+    return accu + mov;
+  })
+
+  const outComes = movements.filter(mov => mov < 0)
+  .reduce(function(accu, mov){
+    return accu + mov;
+  })
+
+  labelSumIn.textContent = `${incomes} EUR`;
+  labelSumOut.textContent = `${outComes} EUR`;
+
+};
+calDisplaySummay(account1.movements);
 
 
 // CREATTING USER NAME
@@ -108,6 +127,5 @@ const createUserName = function(accounts) {
   });
 }; 
 createUserName(accounts);
-
 
 
