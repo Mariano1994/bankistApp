@@ -6,21 +6,23 @@
 
 // Data
 const account1 = {
-  owner: 'Jonas Schmedtmann',
+  owner: 'Mariano Capiliku',
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
   interestRate: 1.2, // %
   pin: 1111,
 };
 
 const account2 = {
-  owner: 'Jessica Davis',
+  owner: 'Neri Capiliku',
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
 };
 
+
+
 const account3 = {
-  owner: 'Steven Thomas Williams',
+  owner: 'Ricardo Tchimbua',
   movements: [200, -200, 340, -300, -20, 50, 400, -460],
   interestRate: 0.7,
   pin: 3333,
@@ -80,9 +82,9 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
   });
  };
- displayMovements(account1.movements);
-
  
+
+
 // CALCULATING BALANCES
 const calcDisplayBalance = function(movements) {
 
@@ -93,29 +95,29 @@ const calcDisplayBalance = function(movements) {
   labelBalance.textContent = `${balance}€`;
 
 }
-calcDisplayBalance(account1.movements);
+
 
 
 // Calculating Sammury
-const calDisplaySummay = function(movements) {
+const calDisplaySummay = function(acc) {
   // INCOMES
-  const incomes = movements
+  const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce(function(accu, mov){
       return accu + mov;
   }, 0);
 
   // OUTCOMES
-  const outComes = movements
+  const outComes = acc.movements
     .filter(mov => mov < 0)
     .reduce(function(accu, mov){
       return accu + mov;
   }, 0);
 
   // INTEREST
-  const interest = movements
+  const interest = acc.movements
     .filter(mov => mov > 0)
-    .map(deposit => (deposit * 1.2) / 100)
+    .map(deposit => (deposit * acc.interestRate) / 100)
     .filter(deposit => deposit >= 1)
     .reduce((acc, int) => acc + int, 0);
    
@@ -125,20 +127,55 @@ const calDisplaySummay = function(movements) {
   labelSumInterest.textContent = `${interest}€`;
 
 };
-calDisplaySummay(account1.movements);
+
 
 
 // CREATTING USER NAME
 const createUserName = function(accounts) {
   accounts.forEach(function(account) {
-    account.userName = account.owner.toLowerCase()
+    account.username = account.owner.toLowerCase()
     .split(' ').map(function(name) {
       return name[0];
 
     }).join('');
 
   });
+
 }; 
 createUserName(accounts);
 
 
+
+
+// LOGIN FUNCTOIN
+
+let currentAccount;
+btnLogin.addEventListener('click', function(e){
+  // Prevent form from submitting
+  e.preventDefault(); 
+
+  currentAccount = accounts.find(function(account){
+    return account.username === inputLoginUsername.value
+  });
+
+  if(currentAccount?.pin === Number(inputLoginPin.value)) {
+    // Display Welcome Message
+    labelWelcome.textContent = `Welcome back, ${currentAccount.owner.split(' ')[0]}`;
+
+   // Display UI (User Interface) 
+    containerApp.style.opacity = 100;
+
+    // Clear input fields 
+    inputLoginUsername.value = inputLoginPin.value = '';
+    inputLoginPin.blur();
+    
+    // Display movements
+    displayMovements(currentAccount.movements);
+    // Display Balance 
+    calcDisplayBalance(currentAccount.movements);
+    // Display Summary
+    calDisplaySummay(currentAccount);
+
+  }
+
+});
