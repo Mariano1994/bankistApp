@@ -130,6 +130,7 @@ const calDisplaySummay = function(acc) {
 
 
 
+
 // CREATTING USER NAME
 const createUserName = function(accounts) {
   accounts.forEach(function(account) {
@@ -143,6 +144,8 @@ const createUserName = function(accounts) {
 
 }; 
 createUserName(accounts);
+
+
 
 // UPDATE UI FUNTION
 const updatUI = function(acc){
@@ -185,8 +188,11 @@ btnLogin.addEventListener('click', function(event){
 
 });
 
+
+
 // Transfer Function 
 btnTransfer.addEventListener('click', function(e){
+
   e.preventDefault();
   const amount = Number(inputTransferAmount.value);
   const receiver = accounts.find(function(acc){
@@ -195,6 +201,7 @@ btnTransfer.addEventListener('click', function(e){
 
   if(amount > 0 && receiver && currentAccount.balance >= amount && receiver.username !==   currentAccount.username){
 
+    // DOING TRANSFERENCE
     currentAccount.movements = [...currentAccount.movements, -amount];
     receiver.movements = [...receiver.movements, amount];
 
@@ -205,4 +212,31 @@ btnTransfer.addEventListener('click', function(e){
 
   };
 
+});
+
+
+// CLOSE ACCOUNT FUNCTION (DELETE USER)
+btnClose.addEventListener('click', function(event){
+  event.preventDefault();
+
+  if (currentAccount.username === inputCloseUsername.value && currentAccount.pin === Number(inputClosePin.value)) {
+
+    const index = accounts.findIndex(function(acc){
+
+      return acc.username === currentAccount.username;
+
+    });
+
+    // Delete Account
+    accounts.splice(index, 1);
+
+    // Hidding UI
+    containerApp.style.opacity = 0;
+
+    inputCloseUsername.value = inputClosePin.value = '';
+    inputClosePin.blur();
+   
+  
+  }
+  
 })
