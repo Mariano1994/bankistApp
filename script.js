@@ -198,7 +198,10 @@ btnTransfer.addEventListener("click", function (e) {
 btnLoan.addEventListener("click", function (event) {
   event.preventDefault();
   const amount = Number(inputLoanAmount.value);
-  if (amount > 0 && currentAccount.movements.some((move) => move > 0)) {
+  if (
+    amount > 0 &&
+    currentAccount.movements.some((move) => move >= amount * 0.1)
+  ) {
     currentAccount.movements.push(amount);
     updatUI(currentAccount);
     inputLoanAmount.value = "";
