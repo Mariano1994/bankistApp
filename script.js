@@ -57,13 +57,7 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
-/*  <div class="movements__row">
-          <div class="movements__type movements__type--deposit">2 deposit</div>
-          <div class="movements__date">3 days ago</div>
-          <div class="movements__value">4 000€</div>
-     </div>
- */
-
+// FUNCTION TO DISPLAT ALL THE MOVIMENTS
 const displayMoviments = (moviments) => {
   containerMovements.innerHTML = "";
   moviments.forEach((moviment, index) => {
@@ -80,5 +74,4 @@ const displayMoviments = (moviments) => {
     containerMovements.insertAdjacentHTML("afterbegin", html);
   });
 };
-
 displayMoviments(account1.movements);
