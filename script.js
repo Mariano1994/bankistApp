@@ -56,3 +56,24 @@ const inputTransferAmount = document.querySelector(".form__input--amount");
 const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
+
+/*  <div class="movements__row">
+          <div class="movements__type movements__type--deposit">2 deposit</div>
+          <div class="movements__date">3 days ago</div>
+          <div class="movements__value">4 000€</div>
+     </div>
+ */
+
+const displayMoviments = (moviments) => {
+  moviments.forEach((moviment, index) => {
+    const type = moviment > 0 ? "deposit" : "withdrawl";
+    const html = ` <div class="movements__row">
+                      <div class="movements__type movements__type--${type}">${
+      index + 1
+    } ${type}</div>
+                      <div class="movements__date">3 days ago</div>
+                      <div class="movements__value">${moviment}€</div>
+                    </div>`;
+    return;
+  });
+};
