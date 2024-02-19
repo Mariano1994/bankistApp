@@ -83,11 +83,44 @@ const calculateBalance = (movements) => {
   return balance;
 };
 
-// Function to display the Balance into the UI
-const displayBalance = (balance) => {
-  labelBalance.textContent = `${balance}€`;
+// Function tom calculate the incomes
+const calculateIncomes = (movements) => {
+  const incomes = movements
+    .filter((movement) => movement > 0)
+    .reduce((acc, mov) => (acc += mov), 0);
+
+  return incomes;
 };
-displayBalance(calculateBalance(account1.movements));
+
+// Function to Calculate the Outcomes
+
+const calculateOutcomes = (movements) => {
+  const outcomes = movements
+    .filter((movement) => movement < 0)
+    .reduce((acc, mov) => (acc += mov), 0);
+
+  return Math.abs(outcomes);
+};
+
+// Function to Calculate the interest
+const calculateInterest = (movements) => {
+  const interest = movements
+    .filter((movement) => movement > 0)
+    .map((deposit) => (deposit * 1.2) / 100)
+    .reduce((acc, deposit) => (acc += deposit), 0);
+  return interest;
+};
+
+// Function to display any information into the DOM
+const display = (value, element) => {
+  element.textContent = `${value}€`;
+};
+
+// Calling the display function to display different values into the DOM
+display(calculateBalance(account1.movements), labelBalance);
+display(calculateIncomes(account1.movements), labelSumIn);
+display(calculateOutcomes(account1.movements), labelSumOut);
+display(calculateInterest(account1.movements), labelSumInterest);
 
 // Function to create a user Name
 const createUserName = (account) => {
