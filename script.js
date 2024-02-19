@@ -75,3 +75,17 @@ const displayMoviments = (moviments) => {
   });
 };
 displayMoviments(account1.movements);
+
+// Function to create a user Name
+const createUserName = (account) => {
+  account.forEach(
+    (userName) =>
+      (userName.username = userName.owner
+        .toLocaleLowerCase()
+        .split(" ")
+        .map((user) => user[0])
+        .join(""))
+  );
+};
+
+createUserName(accounts);
