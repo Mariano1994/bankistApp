@@ -57,7 +57,7 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
-// FUNCTION TO DISPLAT ALL THE MOVIMENTS
+// FUNCTION TO DISPLAY ALL THE MOVIMENTS
 const displayMoviments = (moviments) => {
   containerMovements.innerHTML = "";
   moviments.forEach((moviment, index) => {
@@ -74,7 +74,20 @@ const displayMoviments = (moviments) => {
     containerMovements.insertAdjacentHTML("afterbegin", html);
   });
 };
+
 displayMoviments(account1.movements);
+
+// Function to Calculate the Balance
+const calculateBalance = (movements) => {
+  const balance = movements.reduce((acc, mov) => (acc += mov), 0);
+  return balance;
+};
+
+// Function to display the Balance into the UI
+const displayBalance = (balance) => {
+  labelBalance.textContent = `${balance}€`;
+};
+displayBalance(calculateBalance(account1.movements));
 
 // Function to create a user Name
 const createUserName = (account) => {
