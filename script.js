@@ -107,6 +107,7 @@ const calculateInterest = (movements) => {
   const interest = movements
     .filter((movement) => movement > 0)
     .map((deposit) => (deposit * 1.2) / 100)
+    .filter((interest) => interest >= 1)
     .reduce((acc, deposit) => (acc += deposit), 0);
   return interest;
 };
