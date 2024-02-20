@@ -103,10 +103,10 @@ const calculateOutcomes = (movements) => {
 };
 
 // Function to Calculate the interest
-const calculateInterest = (movements) => {
-  const interest = movements
+const calculateInterest = (account) => {
+  const interest = account.movements
     .filter((movement) => movement > 0)
-    .map((deposit) => (deposit * 1.2) / 100)
+    .map((deposit) => (deposit * account.interestRate) / 100)
     .filter((interest) => interest >= 1)
     .reduce((acc, deposit) => (acc += deposit), 0);
   return interest;
@@ -118,10 +118,6 @@ const display = (value, element) => {
 };
 
 // Calling the display function to display different values into the DOM
-display(calculateBalance(account1.movements), labelBalance);
-display(calculateIncomes(account1.movements), labelSumIn);
-display(calculateOutcomes(account1.movements), labelSumOut);
-display(calculateInterest(account1.movements), labelSumInterest);
 
 // Function to create a user Name
 const createUserName = (account) => {
@@ -136,3 +132,34 @@ const createUserName = (account) => {
 };
 
 createUserName(accounts);
+
+// LOGIN FUNCITONALITY
+let currentAccount;
+btnLogin.addEventListener("click", (event) => {
+  event.preventDefault();
+
+  currentAccount = accounts.find(
+    (acc) => acc.username === inputLoginUsername.value
+  );
+
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    labelWelcome.textContent = `Welcome, ${currentAccount.owner.split(" ")[0]}`;
+
+    containerApp.style.opacity = 100;
+
+    display(calculateBalance(currentAccount.movements), labelBalance);
+    display(calculateIncomes(currentAccount.movements), labelSumIn);
+    display(calculateOutcomes(currentAccount.movements), labelSumOut);
+    display(calculateInterest(currentAccount), labelSumInterest);
+
+    inputLoginPin.value = "";
+    inputLoginPin.blur();
+    inputLoginUsername.value = "";
+  } else {
+    containerApp.style.opacity = 0;
+    inputLoginPin.value = "";
+    inputLoginPin.blur();
+    inputLoginUsername.value = "";
+    alert("User or Password is incorrect");
+  }
+});
