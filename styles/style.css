@@ -22,6 +22,9 @@ body {
   height: 100vh;
   padding: 2rem;
 }
+::-webkit-scrollbar {
+  width: 0;
+}
 
 nav {
   display: flex;

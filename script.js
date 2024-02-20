@@ -165,6 +165,7 @@ btnLogin.addEventListener("click", (event) => {
     inputLoginPin.blur();
     inputLoginUsername.value = "";
     alert("User or Password is incorrect");
+    labelWelcome.textContent = "Log in to get started";
   }
 });
 
@@ -190,5 +191,29 @@ btnTransfer.addEventListener("click", (event) => {
   }
 
   inputTransferAmount.value = " ";
-  inputTransferTo.value = "";
+  inputTransferTo.value = " ";
+});
+
+// Function to Delete an account from the accounts list
+btnClose.addEventListener("click", (event) => {
+  event.preventDefault();
+
+  if (
+    inputCloseUsername.value === currentAccount.username &&
+    Number(inputClosePin.value)
+  ) {
+    const index = accounts.findIndex(
+      (acc) => acc.username === currentAccount.username
+    );
+    if (
+      confirm(`Are you sure you want to delete ${currentAccount.owner} account`)
+    ) {
+      accounts.splice(index, 1);
+      containerApp.style.opacity = 0;
+      labelWelcome.textContent = "Log in to get started";
+    }
+  }
+
+  inputCloseUsername.value = "";
+  inputClosePin.value = "";
 });
