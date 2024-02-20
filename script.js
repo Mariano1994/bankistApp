@@ -217,3 +217,18 @@ btnClose.addEventListener("click", (event) => {
   inputCloseUsername.value = "";
   inputClosePin.value = "";
 });
+
+btnLoan.addEventListener("click", (event) => {
+  event.preventDefault();
+  const amount = Number(inputLoanAmount.value);
+  if (
+    amount > 0 &&
+    currentAccount.movements.some((mov) => mov >= amount * 0.1)
+  ) {
+    currentAccount.movements.push(amount);
+    updateUI(currentAccount);
+  } else {
+    alert("You are not allowed to receive this amount of money");
+  }
+  inputLoanAmount.value = "";
+});
