@@ -183,7 +183,12 @@ btnTransfer.addEventListener("click", (event) => {
   ) {
     currentAccount.movements.push(-amount);
     receiverAcc.movements.push(amount);
-
     updateUI(currentAccount);
+    alert(`Transfer to ${receiverAcc.owner} completed successfully`);
+  } else {
+    alert(`Transfer failed. Plase check your information`);
   }
+
+  inputTransferAmount.value = " ";
+  inputTransferTo.value = "";
 });
