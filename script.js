@@ -75,17 +75,15 @@ const displayMoviments = (moviments) => {
   });
 };
 
-displayMoviments(account1.movements);
-
 // Function to Calculate the Balance
-const calculateBalance = (movements) => {
-  const balance = movements.reduce((acc, mov) => (acc += mov), 0);
-  return balance;
-};
+function calculateBalance(acc) {
+  acc.balance = acc.movements.reduce((acc, mov) => (acc += mov), 0);
+  return acc.balance;
+}
 
 // Function tom calculate the incomes
-const calculateIncomes = (movements) => {
-  const incomes = movements
+const calculateIncomes = (acc) => {
+  const incomes = acc.movements
     .filter((movement) => movement > 0)
     .reduce((acc, mov) => (acc += mov), 0);
 
@@ -94,8 +92,8 @@ const calculateIncomes = (movements) => {
 
 // Function to Calculate the Outcomes
 
-const calculateOutcomes = (movements) => {
-  const outcomes = movements
+const calculateOutcomes = (acc) => {
+  const outcomes = acc.movements
     .filter((movement) => movement < 0)
     .reduce((acc, mov) => (acc += mov), 0);
 
@@ -103,10 +101,10 @@ const calculateOutcomes = (movements) => {
 };
 
 // Function to Calculate the interest
-const calculateInterest = (account) => {
-  const interest = account.movements
+const calculateInterest = (acc) => {
+  const interest = acc.movements
     .filter((movement) => movement > 0)
-    .map((deposit) => (deposit * account.interestRate) / 100)
+    .map((deposit) => (deposit * acc.interestRate) / 100)
     .filter((interest) => interest >= 1)
     .reduce((acc, deposit) => (acc += deposit), 0);
   return interest;
@@ -133,6 +131,15 @@ const createUserName = (account) => {
 
 createUserName(accounts);
 
+// Fucntion to Update the UI
+function updateUI(acc) {
+  displayMoviments(acc.movements);
+  display(calculateBalance(acc), labelBalance);
+  display(calculateIncomes(acc), labelSumIn);
+  display(calculateOutcomes(acc), labelSumOut);
+  display(calculateInterest(acc), labelSumInterest);
+}
+
 // LOGIN FUNCITONALITY
 let currentAccount;
 btnLogin.addEventListener("click", (event) => {
@@ -146,11 +153,8 @@ btnLogin.addEventListener("click", (event) => {
     labelWelcome.textContent = `Welcome, ${currentAccount.owner.split(" ")[0]}`;
 
     containerApp.style.opacity = 100;
-
-    display(calculateBalance(currentAccount.movements), labelBalance);
-    display(calculateIncomes(currentAccount.movements), labelSumIn);
-    display(calculateOutcomes(currentAccount.movements), labelSumOut);
-    display(calculateInterest(currentAccount), labelSumInterest);
+    //Update UI
+    updateUI(currentAccount);
 
     inputLoginPin.value = "";
     inputLoginPin.blur();
@@ -161,5 +165,25 @@ btnLogin.addEventListener("click", (event) => {
     inputLoginPin.blur();
     inputLoginUsername.value = "";
     alert("User or Password is incorrect");
+  }
+});
+
+// Tranfer money functionality
+btnTransfer.addEventListener("click", (event) => {
+  event.preventDefault();
+  const amount = Number(inputTransferAmount.value);
+  const receiverAcc = accounts.find(
+    (acc) => acc.username === inputTransferTo.value
+  );
+  if (
+    amount > 0 &&
+    receiverAcc &&
+    currentAccount.balance >= amount &&
+    receiverAcc?.username !== currentAccount.username
+  ) {
+    currentAccount.movements.push(-amount);
+    receiverAcc.movements.push(amount);
+
+    updateUI(currentAccount);
   }
 });
