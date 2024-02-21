@@ -58,17 +58,19 @@ const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
 // FUNCTION TO DISPLAY ALL THE MOVIMENTS
-const displayMoviments = (moviments) => {
+const displayMoviments = (movements, sort = false) => {
   containerMovements.innerHTML = "";
-  moviments.forEach((moviment, index) => {
-    const type = moviment > 0 ? "deposit" : "withdrawal";
+
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  movs.forEach((movement, index) => {
+    const type = movement > 0 ? "deposit" : "withdrawal";
     const html = ` 
     <div class="movements__row">
                       <div class="movements__type movements__type--${type}">${
       index + 1
     } ${type}</div>
                       <div class="movements__date">3 days ago</div>
-                      <div class="movements__value">${moviment}€</div>
+                      <div class="movements__value">${movement}€</div>
                     </div>`;
 
     containerMovements.insertAdjacentHTML("afterbegin", html);
@@ -231,4 +233,11 @@ btnLoan.addEventListener("click", (event) => {
     alert("You are not allowed to receive this amount of money");
   }
   inputLoanAmount.value = "";
+});
+
+let sorted = false;
+btnSort.addEventListener("click", (event) => {
+  event.preventDefault();
+  displayMoviments(currentAccount.movements, !sorted);
+  sorted = !sorted;
 });
