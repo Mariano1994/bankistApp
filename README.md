@@ -12,6 +12,7 @@ Built using javaScript, the propouse of this app is to trainnig on workinh with 
 ###### Transfer Money to another User
 ###### Loan Money to Current User
 ###### Close current user account
+###### LogOut user after some time of inactivity
 
 ### Testing user accounts
 ##### User 1
