@@ -188,7 +188,7 @@ function updateUI(acc) {
 }
 
 // LOGIN FUNCITONALITY
-let currentAccount;
+let currentAccount, timer;
 btnLogin.addEventListener("click", (event) => {
   event.preventDefault();
 
@@ -223,6 +223,10 @@ btnLogin.addEventListener("click", (event) => {
     containerApp.style.opacity = 100;
     //Update UI
     updateUI(currentAccount);
+
+    //RESTART TIMER IF ALREDY EXIST
+    if (timer) clearInterval(timer);
+    timer = logOutStartTimer();
 
     inputLoginPin.value = "";
     inputLoginPin.blur();
@@ -264,6 +268,10 @@ btnTransfer.addEventListener("click", (event) => {
 
   inputTransferAmount.value = " ";
   inputTransferTo.value = " ";
+
+  // RESTART TIMER
+  clearInterval(timer);
+  timer = logOutStartTimer();
 });
 
 // Function to Delete an account from the accounts list
@@ -308,11 +316,43 @@ btnLoan.addEventListener("click", (event) => {
     alert("You are not allowed to receive this amount of money");
   }
   inputLoanAmount.value = "";
+
+  // RESTART TIMER
+  clearInterval(timer);
+  timer = logOutStartTimer();
 });
 
+// Sort The list on click
 let sorted = false;
 btnSort.addEventListener("click", (event) => {
   event.preventDefault();
   displayMoviments(currentAccount, !sorted);
   sorted = !sorted;
+
+  // RESTART TIMER
+  clearInterval(timer);
+  timer = logOutStartTimer();
 });
+
+//  Function to logout the user after some time
+
+function logOutStartTimer() {
+  let time = 600;
+  const tick = () => {
+    const min = String(Math.trunc(time / 60)).padStart(2, "0");
+    const sec = String(Math.trunc(time % 60)).padStart(2, 0);
+    labelTimer.textContent = `${min}: ${sec}`;
+
+    if (time === 0) {
+      clearInterval(timer);
+      containerApp.style.opacity = 0;
+      labelWelcome.textContent = "Log in to get started";
+    }
+
+    time--;
+  };
+
+  tick();
+  timer = setInterval(tick, 1000);
+  return timer;
+}

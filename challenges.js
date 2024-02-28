@@ -198,3 +198,14 @@ const newAnserPoll = registeNewAnswer.bind(poll);
 answerBtn.addEventListener("click", newAnserPoll);
 
 // CLOSURES
+
+// CHALLENGE SETINTER
+
+// setInterval(() => {
+//   const date = new Date();
+//   const hour = date.getHours();
+//   const minute = date.getMinutes();
+//   // const seconds = date.getSecond();
+
+//   console.log(`${hour} : ${minute}`);
+// }, 1000);
