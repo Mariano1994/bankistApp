@@ -66,6 +66,17 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
+// FUCNTON TO FORMAT THE CURRENCY
+
+function formatCurrency(value, locale, currency) {
+  const option = {
+    style: "currency",
+    currency,
+  };
+
+  return new Intl.NumberFormat(locale, option).format(value);
+}
+
 // FUNCTION TO DISPLAY ALL THE MOVIMENTS
 const displayMoviments = (account, sort = false) => {
   containerMovements.innerHTML = "";
@@ -77,12 +88,22 @@ const displayMoviments = (account, sort = false) => {
     const type = movement > 0 ? "deposit" : "withdrawal";
 
     const date = new Date(account.movementsDates[index]);
-    const now = new Date();
-    const day = `${date.getDate()}`.padStart(2, 0);
-    const month = `${date.getMonth() + 1}`.padStart(2, 0);
-    const year = date.getFullYear();
+    const options = {
+      day: "numeric",
+      month: "2-digit",
+      year: "numeric",
+    };
 
-    const displayDate = `${day}/${month}/${year}`;
+    const locale = account.locale;
+
+    const formatedMov = formatCurrency(
+      movement,
+      account.locale,
+      account.currency
+    );
+
+    // FORMAT CURRENCY USING INTERNATIONALIZATION API
+    const displayDate = new Intl.DateTimeFormat(locale, options).format(date);
     const html = ` 
     <div class="movements__row">
                       <div class="movements__type movements__type--${type}">${
@@ -90,9 +111,7 @@ const displayMoviments = (account, sort = false) => {
     } ${type}</div>
                       <div class="movements__date">${displayDate}</div>
                       
-                      <div class="movements__value">${movement.toFixed(
-                        2
-                      )}€</div>
+                      <div class="movements__value">${formatedMov}</div>
                     </div>`;
 
     containerMovements.insertAdjacentHTML("afterbegin", html);
@@ -136,10 +155,14 @@ const calculateInterest = (acc) => {
 
 // Function to display any information into the DOM
 const display = (value, element) => {
-  element.textContent = `${value.toFixed(2)}€`;
-};
+  const formatedValue = formatCurrency(
+    value,
+    currentAccount.locale,
+    currentAccount.currency
+  );
 
-// Calling the display function to display different values into the DOM
+  element.textContent = `${formatedValue}`;
+};
 
 // Function to create a user Name
 const createUserName = (account) => {
@@ -176,14 +199,25 @@ btnLogin.addEventListener("click", (event) => {
   if (currentAccount?.pin === Number(inputLoginPin.value)) {
     labelWelcome.textContent = `Welcome, ${currentAccount.owner.split(" ")[0]}`;
 
-    // Create current Date
+    // Create Date using internationalization
     const now = new Date();
-    const day = `${now.getDate()}`.padStart(2, 0);
-    const month = `${now.getMonth() + 1}`.padStart(2, 0);
-    const year = now.getFullYear();
-    const hours = `${now.getHours()}`.padStart(2, 0);
-    const minutes = `${now.getMinutes()}`.padStart(2, 0);
-    labelDate.textContent = `${day}/${month}/${year}, ${hours}:${minutes}`;
+
+    // Object of options that will determine the information on date
+    const options = {
+      hour: "numeric",
+      minute: "numeric",
+      day: "numeric",
+      month: "2-digit",
+      year: "numeric",
+      // weekday: "long",
+    };
+
+    // Using the local time format to determine in which language the date will be displayed
+    const locale = currentAccount.locale;
+
+    labelDate.textContent = new Intl.DateTimeFormat(locale, options).format(
+      now
+    );
 
     // SHOW THE UI
     containerApp.style.opacity = 100;
@@ -216,10 +250,14 @@ btnTransfer.addEventListener("click", (event) => {
     currentAccount.balance >= amount &&
     receiverAcc?.username !== currentAccount.username
   ) {
-    currentAccount.movements.push(-amount);
-    receiverAcc.movements.push(amount);
-    updateUI(currentAccount);
-    alert(`Transfer to ${receiverAcc.owner} completed successfully`);
+    setTimeout(() => {
+      currentAccount.movements.push(-amount);
+      currentAccount.movementsDates.push(new Date().toDateString());
+      receiverAcc.movements.push(amount);
+      receiverAcc.movementsDates.push(new Date().toDateString());
+      updateUI(currentAccount);
+      alert(`Transfer to ${receiverAcc.owner} completed successfully`);
+    }, 3000);
   } else {
     alert(`Transfer failed. Plase check your information`);
   }
@@ -260,8 +298,12 @@ btnLoan.addEventListener("click", (event) => {
     amount > 0 &&
     currentAccount.movements.some((mov) => mov >= amount * 0.1)
   ) {
-    currentAccount.movements.push(amount);
-    updateUI(currentAccount);
+    setTimeout(() => {
+      currentAccount.movements.push(amount);
+      currentAccount.movementsDates.push(new Date().toDateString());
+      updateUI(currentAccount);
+      alert(`${currentAccount.owner} received ${amount} on loan`);
+    }, 3000);
   } else {
     alert("You are not allowed to receive this amount of money");
   }
